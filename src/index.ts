@@ -1,4 +1,5 @@
 import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
 
 const start = async () => {
   if (!process.env.NATS_CLUSTER_ID) {
@@ -19,6 +20,8 @@ const start = async () => {
       process.env.NATS_CLIENT_ID,
       process.env.NATS_URL
     );
+
+    new OrderCreatedListener(natsWrapper.client).listen();
 
     natsWrapper.client.on('close', () => {
       console.log('NATS connected closed!');
